@@ -22,8 +22,10 @@
 (let ((package-list
        '(attrap dante flycheck-haskell flycheck haskell-mode
 	 markdown-mode pkg-info use-package bind-key
+	 exec-path-from-shell
 	 ;; intero company lcr dash
-	 ;; define-word elisp-slime-nav exec-path-from-shell f 
+	 ;; define-word elisp-slime-nav
+	 ;; f 
          ;; mmm-mode nlinum epl popwin s seq
 	 ;; w3m yaml-mode zoom-frm frame-cmds 
          ;; frame-functions
@@ -174,3 +176,8 @@
                          "git-monitor" "-d" path))))))
 
 (add-hook 'magit-status-mode-hook #'(lambda () (magit-monitor t)))
+
+;; Conal's tip on loading environment variables when launching from desktop.
+;; https://github.com/purcell/exec-path-from-shell
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
