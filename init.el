@@ -22,7 +22,7 @@
 (let ((package-list
        '(attrap dante flycheck-haskell flycheck haskell-mode
 	 markdown-mode pkg-info use-package bind-key
-	 exec-path-from-shell
+	 exec-path-from-shell magit
 	 ;; intero company lcr dash
 	 ;; define-word elisp-slime-nav
 	 ;; f 
