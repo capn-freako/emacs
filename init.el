@@ -181,3 +181,14 @@
 ;; https://github.com/purcell/exec-path-from-shell
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
+
+;; Saving a list of recently editted files.
+;; https://www.emacswiki.org/emacs/RecentFiles
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(setq recentf-max-saved-items 25)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+(run-at-time nil (* 5 60) 'recentf-save-list)
+
+;; Misc.
+(column-number-mode 1)
