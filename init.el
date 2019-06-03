@@ -161,13 +161,11 @@
   ;; (add-hook 'haskell-mode-hook 'flymake-mode)
   )
 
-;; (add-hook 'dante-mode-hook
-;;   '(lambda ()
-;;      ;; (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint))
-;;      (flycheck-add-next-checker 'haskell-dante 'haskell-hlint)
-;;      (flycheck-add-next-checker 'haskell-hlint 'haskell-liquid)
-;;    )
-;; )
+(add-hook 'dante-mode-hook
+  '(lambda ()
+     (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint))
+   )
+)
 ;; ----------------------------------------
 
 ;; ----------------------- Configure Flycheck ------------------
