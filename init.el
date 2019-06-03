@@ -1,4 +1,10 @@
+;;; dbanas-init --- David Banas' Emacs main configuration file.
+;;; Commentary:
+
 (require 'package)
+
+;;; Code:
+
 (setq package-enable-at-startup nil)
 
 ;; https://emacs.stackexchange.com/a/2989
@@ -23,11 +29,12 @@
        '(attrap dante flycheck-haskell flycheck haskell-mode
 	 markdown-mode pkg-info use-package bind-key
 	 exec-path-from-shell magit
+	 pos-tip popup button-lock flycheck-color-mode-line flycheck-liquidhs
 	 ;; intero company lcr dash
 	 ;; define-word elisp-slime-nav
-	 ;; f 
+	 ;; f
          ;; mmm-mode nlinum epl popwin s seq
-	 ;; w3m yaml-mode zoom-frm frame-cmds 
+	 ;; w3m yaml-mode zoom-frm frame-cmds
          ;; frame-functions
          )))
   (dolist (package package-list)
@@ -99,6 +106,8 @@
 ;; haskell-mode stuff
 (require 'haskell-interactive-mode)
 (require 'haskell-process)
+(require 'flycheck)
+(require 'flycheck-liquidhs)
 (eval-after-load "haskell-mode"
     '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
 (eval-after-load "haskell-cabal"
@@ -108,7 +117,7 @@
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (eval-after-load "haskell"
   '(progn
-     (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-jump-to-def-or-tag)     
+     (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-jump-to-def-or-tag)
      (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
      (define-key interactive-haskell-mode-map (kbd "M-n")     'next-error)
      (define-key interactive-haskell-mode-map (kbd "M-p")     'previous-error)
@@ -136,24 +145,67 @@
          "--no-build" "--no-load"))
  (setq haskell-process-args-cabal-new-repl
        '("--ghc-options=-ferror-spans -fshow-loaded-modules")))
-(use-package dante
-  :ensure t
-  :after haskell-mode
-  :commands 'dante-mode
-  :init
-  (add-hook 'haskell-mode-hook 'dante-mode)
-  (add-hook 'haskell-mode-hook 'flycheck-mode)
-  ;; OR:
-  ;; (add-hook 'haskell-mode-hook 'flymake-mode)
-  )
+;; (use-package dante
+;;   :ensure t
+;;   :after haskell-mode
+;;   :commands 'dante-mode
+;;   :init
+;;   (add-hook 'haskell-mode-hook 'dante-mode)
+;;   (add-hook 'haskell-mode-hook 'flycheck-mode)
+;;   ;; OR:
+;;   ;; (add-hook 'haskell-mode-hook 'flymake-mode)
+;;   )
+;; (add-hook 'dante-mode-hook
+;;   '(lambda ()
+;;      ;; (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint))
+;;      (flycheck-add-next-checker 'haskell-dante 'haskell-hlint)
+;;      (flycheck-add-next-checker 'haskell-hlint 'haskell-liquid)
+;;    )
+;; )
+
+;; ----------------------- Configure Flycheck ------------------
+
+
+;; Global Flycheck
+(global-flycheck-mode)
+
+;; Rerun check on idle and save
+;; (setq flycheck-check-syntax-automatically '(mode-enabled idle-change save))
+
 (setq flymake-no-changes-timeout nil)
 (setq flymake-start-syntax-check-on-newline nil)
 (setq flycheck-check-syntax-automatically '(save mode-enabled))
-(auto-save-visited-mode 1)
-(setq auto-save-visited-interval 1)
-(add-hook 'dante-mode-hook
-   '(lambda () (flycheck-add-next-checker 'haskell-dante
-                '(warning . haskell-hlint))))
+
+;; (require 'flycheck-color-mode-line)
+
+;; (eval-after-load "flycheck"
+;;   '(add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
+
+;; (set-face-attribute 'flycheck-error nil
+;;                     :foreground "red"
+;; 	            :background "pink")
+
+;; ----------------------- Configure LiquidHaskell -------------
+
+;; (add-to-list 'load-path "~/.emacs.d/liquid-tip.el/")
+
+;; Configure flycheck-liquidhs, if you haven't already
+;; (add-hook 'haskell-mode-hook
+;;           '(lambda () (flycheck-select-checker 'haskell-liquid)))
+
+(add-hook 'literate-haskell-mode-hook
+          '(lambda () (flycheck-select-checker 'haskell-liquid)))
+
+;; (require 'liquid-types)
+
+;; Toggle minor mode on entering Haskell mode.
+;; (add-hook 'haskell-mode-hook
+;;           '(lambda () (liquid-types-mode)))
+;; (add-hook 'literate-haskell-mode-hook
+;; 	  '(lambda () (liquid-types-mode)))
+
+;; -------------------------------------------------------------
+
 ;; markdown-mode stuff
 (add-to-list 'auto-mode-alist '("\\.page\\'" . markdown-mode))
 
@@ -192,3 +244,5 @@
 
 ;; Misc.
 (column-number-mode 1)
+(auto-save-visited-mode 1)
+(setq auto-save-visited-interval 1)
