@@ -103,11 +103,13 @@
         (background-color . "gray10")
         (foreground-color . "gray90")))
 
-;; haskell-mode stuff
+;; ---------------- haskell-mode stuff --------------------------
+(require 'haskell-mode)
 (require 'haskell-interactive-mode)
 (require 'haskell-process)
 (require 'flycheck)
 (require 'flycheck-liquidhs)
+
 (eval-after-load "haskell-mode"
     '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
 (eval-after-load "haskell-cabal"
@@ -115,6 +117,7 @@
 ;; (setq haskell-compile-cabal-build-command "stack build")
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+
 (eval-after-load "haskell"
   '(progn
      (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-jump-to-def-or-tag)
@@ -135,6 +138,7 @@
 ;;      (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)
    )
 )
+
 (with-eval-after-load 'haskell-mode
  (setq haskell-process-args-ghci
        '("-ferror-spans" "-fshow-loaded-modules"))
@@ -145,16 +149,18 @@
          "--no-build" "--no-load"))
  (setq haskell-process-args-cabal-new-repl
        '("--ghc-options=-ferror-spans -fshow-loaded-modules")))
-;; (use-package dante
-;;   :ensure t
-;;   :after haskell-mode
-;;   :commands 'dante-mode
-;;   :init
-;;   (add-hook 'haskell-mode-hook 'dante-mode)
-;;   (add-hook 'haskell-mode-hook 'flycheck-mode)
-;;   ;; OR:
-;;   ;; (add-hook 'haskell-mode-hook 'flymake-mode)
-;;   )
+
+;; --------------- Dante ------------------
+(use-package dante
+  :ensure t
+  :after haskell-mode
+  :commands 'dante-mode
+  :init
+  (add-hook 'haskell-mode-hook 'dante-mode)
+  ;; OR:
+  ;; (add-hook 'haskell-mode-hook 'flymake-mode)
+  )
+
 ;; (add-hook 'dante-mode-hook
 ;;   '(lambda ()
 ;;      ;; (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint))
@@ -162,12 +168,13 @@
 ;;      (flycheck-add-next-checker 'haskell-hlint 'haskell-liquid)
 ;;    )
 ;; )
+;; ----------------------------------------
 
 ;; ----------------------- Configure Flycheck ------------------
 
 
 ;; Global Flycheck
-(global-flycheck-mode)
+;; (global-flycheck-mode)
 
 ;; Rerun check on idle and save
 ;; (setq flycheck-check-syntax-automatically '(mode-enabled idle-change save))
@@ -175,6 +182,8 @@
 (setq flymake-no-changes-timeout nil)
 (setq flymake-start-syntax-check-on-newline nil)
 (setq flycheck-check-syntax-automatically '(save mode-enabled))
+(add-hook 'haskell-mode-hook          'flycheck-mode)
+(add-hook 'literate-haskell-mode-hook 'flycheck-mode)
 
 ;; (require 'flycheck-color-mode-line)
 
@@ -194,7 +203,8 @@
 ;;           '(lambda () (flycheck-select-checker 'haskell-liquid)))
 
 (add-hook 'literate-haskell-mode-hook
-          '(lambda () (flycheck-select-checker 'haskell-liquid)))
+          '(lambda () (flycheck-select-checker 'haskell-stack-liquid)))
+;;          '(lambda () (flycheck-select-checker 'haskell-liquid)))
 
 ;; (require 'liquid-types)
 
