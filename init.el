@@ -175,11 +175,12 @@
 ;; (global-flycheck-mode)
 
 ;; Rerun check on idle and save
-;; (setq flycheck-check-syntax-automatically '(mode-enabled idle-change save))
+(setq flycheck-check-syntax-automatically '(mode-enabled idle-change save))
 
-(setq flymake-no-changes-timeout nil)
-(setq flymake-start-syntax-check-on-newline nil)
-(setq flycheck-check-syntax-automatically '(save mode-enabled))
+;; (setq flymake-no-changes-timeout nil)
+;; (setq flymake-start-syntax-check-on-newline nil)
+;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
+
 (add-hook 'haskell-mode-hook          'flycheck-mode)
 (add-hook 'literate-haskell-mode-hook 'flycheck-mode)
 
@@ -194,23 +195,23 @@
 
 ;; ----------------------- Configure LiquidHaskell -------------
 
-;; (add-to-list 'load-path "~/.emacs.d/liquid-tip.el/")
+(add-to-list 'load-path "~/.emacs.d/liquid-tip.el/")
 
 ;; Configure flycheck-liquidhs, if you haven't already
-;; (add-hook 'haskell-mode-hook
-;;           '(lambda () (flycheck-select-checker 'haskell-liquid)))
-
-(add-hook 'literate-haskell-mode-hook
+(add-hook 'haskell-mode-hook
+          ;; '(lambda () (flycheck-select-checker 'haskell-liquid)))
           '(lambda () (flycheck-select-checker 'haskell-stack-liquid)))
-;;          '(lambda () (flycheck-select-checker 'haskell-liquid)))
+(add-hook 'literate-haskell-mode-hook
+          ;; '(lambda () (flycheck-select-checker 'haskell-liquid)))
+          '(lambda () (flycheck-select-checker 'haskell-stack-liquid)))
 
-;; (require 'liquid-types)
+(require 'liquid-types)
 
 ;; Toggle minor mode on entering Haskell mode.
-;; (add-hook 'haskell-mode-hook
-;;           '(lambda () (liquid-types-mode)))
-;; (add-hook 'literate-haskell-mode-hook
-;; 	  '(lambda () (liquid-types-mode)))
+(add-hook 'haskell-mode-hook
+          '(lambda () (liquid-types-mode)))
+(add-hook 'literate-haskell-mode-hook
+	  '(lambda () (liquid-types-mode)))
 
 ;; -------------------------------------------------------------
 
