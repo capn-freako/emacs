@@ -27,14 +27,14 @@
 ;; https://stackoverflow.com/questions/10092322/how-to-automatically-install-emacs-packages-by-specifying-a-list-of-package-name
 (let ((package-list
        '(attrap dante flycheck-haskell flycheck haskell-mode
-	 markdown-mode pkg-info use-package bind-key
-	 exec-path-from-shell magit
-	 pos-tip popup button-lock flycheck-color-mode-line flycheck-liquidhs
-	 ;; intero company lcr dash
-	 ;; define-word elisp-slime-nav
-	 ;; f
+     markdown-mode pkg-info use-package bind-key
+     exec-path-from-shell magit
+     pos-tip popup button-lock flycheck-color-mode-line flycheck-liquidhs
+     ;; intero company lcr dash
+     ;; define-word elisp-slime-nav
+     ;; f
          ;; mmm-mode nlinum epl popwin s seq
-	 ;; w3m yaml-mode zoom-frm frame-cmds
+     ;; w3m yaml-mode zoom-frm frame-cmds
          ;; frame-functions
          )))
   (dolist (package package-list)
@@ -60,11 +60,13 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ediff-window-setup-function (quote ediff-setup-windows-plain))
+ '(exec-path-from-shell-variables (quote ("PATH" "MANPATH" "PYTHONPATH" "PKG_CONFIG_PATH" "DYLD_FALLBACK_LIBRARY_PATH")))
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-log t)
  '(haskell-process-suggest-remove-import-lines t)
  '(haskell-process-use-presentation-mode t)
  '(haskell-tags-on-save t)
+ '(load-prefer-newer t)
  '(markdown-command "pandoc")
  '(package-selected-packages
    (quote
@@ -90,7 +92,7 @@
 (setq initial-frame-alist
       '((width . 92)
         (height . 54)
-	(font . "Menlo-14")
+    (font . "Menlo-14")
         (background-color . "gray10")
         (foreground-color . "gray90")))
 ;; subsequent window settings
@@ -99,7 +101,7 @@
         (tool-bar-lines . 0)
         (width . 92)
         (height . 52)
-	(font . "Menlo-14")
+    (font . "Menlo-14")
         (background-color . "gray10")
         (foreground-color . "gray90")))
 
@@ -139,16 +141,27 @@
    )
 )
 
+;; (with-eval-after-load 'haskell-mode
+;;  (setq haskell-process-args-ghci
+;;        '("-ferror-spans" "-fshow-loaded-modules"))
+;;  (setq haskell-process-args-cabal-repl
+;;        '("--ghc-options=-ferror-spans -fshow-loaded-modules"))
+;;  (setq haskell-process-args-stack-ghci
+;;        '("--ghci-options=-ferror-spans -fshow-loaded-modules"
+;;          "--no-build" "--no-load"))
+;;  (setq haskell-process-args-cabal-new-repl
+;;        '("--ghc-options=-ferror-spans -fshow-loaded-modules")))
+
 (with-eval-after-load 'haskell-mode
  (setq haskell-process-args-ghci
-       '("-ferror-spans" "-fshow-loaded-modules"))
+       '("-ferror-spans"))
  (setq haskell-process-args-cabal-repl
-       '("--ghc-options=-ferror-spans -fshow-loaded-modules"))
+       '("--ghc-options=-ferror-spans"))
  (setq haskell-process-args-stack-ghci
-       '("--ghci-options=-ferror-spans -fshow-loaded-modules"
+       '("--ghci-options=-ferror-spans"
          "--no-build" "--no-load"))
  (setq haskell-process-args-cabal-new-repl
-       '("--ghc-options=-ferror-spans -fshow-loaded-modules")))
+       '("--ghc-options=-ferror-spans")))
 
 ;; --------------- Dante ------------------
 (use-package dante
@@ -172,7 +185,7 @@
 
 
 ;; Global Flycheck
-;; (global-flycheck-mode)
+(global-flycheck-mode)
 
 ;; Rerun check on idle and save
 (setq flycheck-check-syntax-automatically '(mode-enabled idle-change save))
@@ -181,8 +194,8 @@
 ;; (setq flymake-start-syntax-check-on-newline nil)
 ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
 
-(add-hook 'haskell-mode-hook          'flycheck-mode)
-(add-hook 'literate-haskell-mode-hook 'flycheck-mode)
+;; (add-hook 'haskell-mode-hook          'flycheck-mode)
+;; (add-hook 'literate-haskell-mode-hook 'flycheck-mode)
 
 ;; (require 'flycheck-color-mode-line)
 
@@ -199,11 +212,11 @@
 
 ;; Configure flycheck-liquidhs, if you haven't already
 (add-hook 'haskell-mode-hook
-          ;; '(lambda () (flycheck-select-checker 'haskell-liquid)))
-          '(lambda () (flycheck-select-checker 'haskell-stack-liquid)))
+          '(lambda () (flycheck-select-checker 'haskell-liquid)))
+          ;; '(lambda () (flycheck-select-checker 'haskell-stack-liquid)))
 (add-hook 'literate-haskell-mode-hook
-          ;; '(lambda () (flycheck-select-checker 'haskell-liquid)))
-          '(lambda () (flycheck-select-checker 'haskell-stack-liquid)))
+          '(lambda () (flycheck-select-checker 'haskell-liquid)))
+          ;; '(lambda () (flycheck-select-checker 'haskell-stack-liquid)))
 
 (require 'liquid-types)
 
@@ -211,7 +224,7 @@
 (add-hook 'haskell-mode-hook
           '(lambda () (liquid-types-mode)))
 (add-hook 'literate-haskell-mode-hook
-	  '(lambda () (liquid-types-mode)))
+      '(lambda () (liquid-types-mode)))
 
 ;; -------------------------------------------------------------
 
@@ -255,3 +268,6 @@
 (column-number-mode 1)
 (auto-save-visited-mode 1)
 (setq auto-save-visited-interval 1)
+
+(load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))
