@@ -59,13 +59,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(column-number-mode t)
  '(ediff-window-setup-function (quote ediff-setup-windows-plain))
- '(exec-path-from-shell-variables (quote ("PATH" "MANPATH" "PYTHONPATH" "PKG_CONFIG_PATH" "DYLD_FALLBACK_LIBRARY_PATH")))
+ '(exec-path-from-shell-variables
+   (quote
+    ("PATH" "MANPATH" "PYTHONPATH" "PKG_CONFIG_PATH" "DYLD_FALLBACK_LIBRARY_PATH")))
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-log t)
  '(haskell-process-suggest-remove-import-lines t)
  '(haskell-process-use-presentation-mode t)
  '(haskell-tags-on-save t)
+ '(indent-tabs-mode nil)
  '(load-prefer-newer t)
  '(markdown-command "pandoc")
  '(package-selected-packages
@@ -73,7 +77,14 @@
     (magit use-package dante haskell-emacs markdown-mode haskell-mode)))
  '(save-place t)
  '(show-paren-mode t)
- '(vc-handled-backends (quote (RCS CVS SVN SCCS SRC Bzr Hg Mtn))))
+ '(vc-handled-backends (quote (RCS CVS SVN SCCS SRC Bzr Hg Mtn)))
+ '(verilog-auto-newline nil)
+ '(verilog-indent-level 2)
+ '(verilog-indent-level-behavioral 2)
+ '(verilog-indent-level-declaration 2)
+ '(verilog-indent-level-directive 2)
+ '(verilog-indent-level-module 2)
+ '(verilog-indent-lists nil))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -92,7 +103,7 @@
 (setq initial-frame-alist
       '((width . 92)
         (height . 54)
-    (font . "Menlo-14")
+    (font . "Mononoki-18")
         (background-color . "gray10")
         (foreground-color . "gray90")))
 ;; subsequent window settings
@@ -101,7 +112,7 @@
         (tool-bar-lines . 0)
         (width . 92)
         (height . 52)
-    (font . "Menlo-14")
+    (font . "Mononoki-18")
         (background-color . "gray10")
         (foreground-color . "gray90")))
 
@@ -206,6 +217,11 @@
 ;;                     :foreground "red"
 ;; 	            :background "pink")
 
+; Add SystemC include directories.
+(add-hook 'c++-mode-hook
+          (lambda () (setq flycheck-clang-include-path
+                           (list (expand-file-name "/opt/systemc/include/")))))
+
 ;; ----------------------- Configure LiquidHaskell -------------
 
 (add-to-list 'load-path "~/.emacs.d/liquid-tip.el/")
@@ -271,3 +287,6 @@
 
 (load-file (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
+
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.hpp\\'" . c++-mode))
